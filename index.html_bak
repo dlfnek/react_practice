@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div id="root"></div>
+</body>
+<!--// Engine의 역할 (react.js 그 자체)-->
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<!--// React element를 HTML에 두는 역할 (dom이라는 글자의 의미를 생각하면 이해하기 쉬울 듯)-->
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root")
+    // Title 함수와 Button 함수는 동일한 방법
+    // 1. 일반 함수
+    function Title() {
+        return (<h3 id="title" onMouseEnter={() => console.log("mouse enter")}>
+            Hello I'm a title
+        </h3>)
+    }
+    // 2. 애로우(화살표) 함수
+    const Button = () => (<button style={{ backgroundColor: "tomato" }} onClick={() => console.log("i'm clicked")}>
+        Click me
+    </button>)
+    const Container = (<div>
+        <Title />
+        <Button />
+    </div>)
+    ReactDOM.render(Container, root)
+</script>
+
+</html>
