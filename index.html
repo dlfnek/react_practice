@@ -5,12 +5,14 @@
     <div id="root"></div>
 </body>
 <!--// Engine의 역할 (react.js 그 자체)-->
-<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+<!--<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>-->
 <!--// React element를 HTML에 두는 역할 (dom이라는 글자의 의미를 생각하면 이해하기 쉬울 듯)-->
 <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
 <script type="text/babel">
-    function Btn({ text, onClick }) {
+    function Btn({ text, onClick, fontSize }) {
         return (
             <button
                 onClick={onClick}
@@ -19,7 +21,8 @@
                     color: "white",
                     padding: "10px 20px",
                     border: 0,
-                    borderRadius: 10
+                    borderRadius: 10,
+                    fontSize
                 }}
             >
                 {text}
@@ -27,13 +30,23 @@
         )
     }
     const MemorizedBtn = React.memo(Btn);
+    MemorizedBtn.propTypes = {
+        text: PropTypes.string.isRequired,
+        fontSize: PropTypes.number.isRequired,
+        onClick: PropTypes.func,
+    }
+    Btn.propTypes = {
+        text: PropTypes.string.isRequired,
+        fontSize: PropTypes.number.isRequired,
+        onClick: PropTypes.func,
+    };
     function App() {
         const [value, setValue] = React.useState("Save Changes");
         const changeValue = () => setValue("Revert Changes");
         return (
             <div>
-                <MemorizedBtn text={value} onClick={changeValue} />
-                <MemorizedBtn text="Continue" />
+                <MemorizedBtn text={value} onClick={changeValue} fontSize={10} />
+                <Btn text={"Continue"} fontSize={18} />
             </div>
         )
     }
