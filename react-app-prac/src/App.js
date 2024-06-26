@@ -1,44 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
-  // useState를 통한 변수 관리
-  const [toDo, setToDo] = useState("");
-  const [toDos, setToDos] = useState([]);
-
-  // 변수를 변경시키기 위한 함수들
-  const onChange = (event) => setToDo(event.target.value);
-  const onSubmit = (event) => {
-    event.preventDefault();
-    if (toDo === "") {
-      return;
-    }
-
-    // input 값을 toDos 배열에 추가
-    setToDos((currentArray) => [toDo, ...currentArray]);
-    setToDo("");
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const getMovies = async () => {
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=9&sort_by=year`
+      )
+    ).json();
+    setMovies(json.data.movies);
+    setLoading(false);
   };
+  useEffect(() => {
+    getMovies();
+  }, []);
+  console.log(movies);
   return (
     <div>
-      <h1>My To Dos ({toDos.length})</h1>
-      <form onSubmit={onSubmit}>
-        <input
-          onChange={onChange}
-          value={toDo}
-          type="text"
-          placeholder="Write your to do..."
-        />
-        <button>Add To Do</button>
-      </form>
-      <hr />
-      {/*
-      toDo 목록을 UI에 표시
-      map함수의 경우 (함수를 설정할 시,)
-      배열 안 요소들에 대해서
-      반복문을 수행함
-      */}
-      {toDos.map((item, index) => (
-        <li key={index}>{item}</li>
-      ))}
+      {loading ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div>
+          {movies.map((movie) => (
+            <div key={movie.id}>
+              <img src={movie.medium_cover_image} />
+              <h2>{movie.title}</h2>
+              <p>{movie.summary}</p>
+              <ul>
+                {movie.genres.map((g) => (
+                  <li key={g}>{g}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
